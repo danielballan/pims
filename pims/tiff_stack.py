@@ -199,25 +199,27 @@ class TiffStack_pil(FramesSequence):
         # walk through stack to get length, there has to
         # be a better way to do this
         for j in itertools.count():
-            try:
-                self.im.seek(j)
-            except EOFError:
+            if not self.seek(j):
                 break
 
         self._count = j
-        self.im.seek(0)
+        self.seek(0)
 
     def get_frame(self, j):
         '''Extracts the jth frame from the image sequence.
         if the frame does not exist return None'''
-        try:
-            self.im.seek(j)
-        except EOFError:
-            return None
+        self.seek(j)
         self.cur = self.im.tell()
         res = np.reshape(self.im.getdata(),
                          self._im_sz).astype(self._dtype).T[::-1]
         return Frame(res, frame_no=j)
+
+    def seek(self, j):
+        try:
+            self.im.seek(j)
+        except EOFError:
+            return None
+        return True
 
     @property
     def pixel_type(self):
@@ -232,6 +234,20 @@ class TiffStack_pil(FramesSequence):
 
     def close(self):
         self._tiff.close()
+
+
+class LSM_TiffStack(TiffStack_pil):
+    """
+    Specialized class for dealing with LSM tiffs.
+
+    LSM Tiffs have special seeking behavior.
+    """
+    def seek(self, j):
+        try:
+            self.im.seek(2*j)
+        except EOFError:
+            return None
+        return True
 
 
 class MM_TiffStack(TiffStack_pil):

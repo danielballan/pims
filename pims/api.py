@@ -23,7 +23,7 @@ except (ImportError, IOError):
     Video = not_available("ffmpeg")
 
 try:
-    from pims.tiff_stack import TiffStack_pil, TiffStack_libtiff
+    from pims.tiff_stack import TiffStack_pil, TiffStack_libtiff, LSM_TiffStack
     if pims.tiff_stack.libtiff_available():
         TiffStack = TiffStack_libtiff
     elif pims.tiff_stack.PIL_available():
