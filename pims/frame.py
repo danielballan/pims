@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function,
 import six
 from io import BytesIO
 
-from numpy import ndarray, asarray
+from numpy import ndarray, asarray, percentile, clip
 
 
 class Frame(ndarray):
@@ -50,8 +50,9 @@ class Frame(ndarray):
         w = 500
         h = self.shape[0] * w // self.shape[1] 
         x = asarray(Image.fromarray(self).resize((w, h)))
-        x = (x - x.min()) / (x.max() - x.min())
-        img = Image.fromarray((x*256).astype('uint8'))
+        low, high = percentile(self, [1, 99])
+        x = clip((x - low) / float(high - low), 0, 1)
+        img = Image.fromarray((x*255).astype('uint8'))
         img_buffer = BytesIO()
         img.save(img_buffer, format='png')
         return img_buffer.getvalue()
