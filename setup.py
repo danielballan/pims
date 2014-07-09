@@ -25,9 +25,9 @@ except ImportError:
     _have_setuptools = False
 
 MAJOR = 0
-MINOR = 2
+MINOR = 3
 MICRO = 0
-ISRELEASED = True
+ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 QUALIFIER = ''
 
