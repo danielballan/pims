@@ -1,5 +1,6 @@
 package:
-  name: pims
+  name: test-windows-pims
+  version: 0.0.1
 
 requirements:
   build:
