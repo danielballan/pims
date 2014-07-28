@@ -15,11 +15,11 @@ requirements:
     - numpy
     - scikit-image  # one of { scikit-image | matplotlib | scipy }
 
-test:
-    requires:
-        - nose
-    commands:
-        - nosetests --exe pims
+#test:
+#    requires:
+#        - nose
+#    commands:
+#        - nosetests --exe pims
 
 about:
   home: https://github.com/soft-matter/pims
