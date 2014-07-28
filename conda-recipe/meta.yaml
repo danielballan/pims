@@ -1,0 +1,26 @@
+package:
+  name: pims
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - six
+    - numpy
+    - scikit-image  # one of { scikit-image | matplotlib | scipy }
+
+  run:
+    - python
+    - six
+    - numpy
+    - scikit-image  # one of { scikit-image | matplotlib | scipy }
+
+test:
+    requires:
+        - nose
+    commands:
+        - nosetests --exe pims
+
+about:
+  home: https://github.com/soft-matter/pims
+  license: 3-clause BSD
