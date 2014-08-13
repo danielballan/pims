@@ -24,12 +24,24 @@ except (ImportError, IOError):
 
 try:
     import pims.tiff_stack
-    from pims.tiff_stack import TiffStack_pil, TiffStack_libtiff
-    if pims.tiff_stack.libtiff_available():
+    from pims.tiff_stack import (TiffStack_pil, TiffStack_libtiff,
+                                 TiffStack_tifffile)
+    if pims.tiff_stack.tifffile_available():
+        TiffStack = TiffStack_tifffile
+    elif pims.tiff_stack.libtiff_available():
         TiffStack = TiffStack_libtiff
     elif pims.tiff_stack.PIL_available():
         TiffStack = TiffStack_pil
     else:
         raise ImportError()
 except ImportError:
-    TiffStack = not_available("libtiff or PIL/PILLOW")
+    TiffStack = not_available("tifffile or libtiff or PIL/PILLOW")
+
+try:
+    import pims.zvi_reader
+    if pims.zvi_reader.ole_available():
+        ZVI = pims.zvi_reader.ZVI
+    else:
+        raise ImportError()
+except ImportError:
+    ZVI = not_available("OleFileIO and PIL/Pillow")
