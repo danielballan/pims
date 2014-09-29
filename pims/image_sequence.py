@@ -131,6 +131,10 @@ class ImageSequence(FramesSequence):
 
     def __repr__(self):
         # May be overwritten by subclasses
+        try:
+            source = self.pathname
+        except AttributeError:
+            source = '(list of images)'
         return """<Frames>
 Source: {pathname}
 Length: {count} frames
@@ -138,5 +142,5 @@ Frame Shape: {w} x {h}
 Pixel Datatype: {dtype}""".format(w=self.frame_shape[0],
                                   h=self.frame_shape[1],
                                   count=len(self),
-                                  pathname=self.pathname,
+                                  pathname=source,
                                   dtype=self.pixel_type)
