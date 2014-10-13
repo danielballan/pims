@@ -1,6 +1,33 @@
 package:
-  name: test-windows-pims
-  version: 0.0.1
+  name: pims
+  version: 0.2.1
+
+source:
+  fn: pims-0.2.1.tar.gz
+  url: https://github.com/soft-matter/pims/archive/v0.2.1.tar.gz
+  md5: 871623c381da3840130dfd1588fa46bf
+  sha1: c956b83f8c893a09b25f7576892d022c2d8a6f95
+#  patches:
+   # List any patch files here
+   # - fix.patch
+
+build:
+  #preserve_egg_dir: True
+  #entry_points:
+    # Put any entry points (scripts to be generated automatically) here. The
+    # syntax is module:function.  For example
+    #
+    # - pims = pims:main
+    #
+    # Would create an entry point called pims that calls pims.main()
+
+
+  # If this is a new build for the same version, increment the build
+  # number. If you do not include this key, it defaults to 0.
+  # number: 1
+
+  binary_relocation: true
+
 
 requirements:
   build:
@@ -16,12 +43,28 @@ requirements:
     - numpy
     - scikit-image  # one of { scikit-image | matplotlib | scipy }
 
-#test:
-#    requires:
-#        - nose
-#    commands:
-#        - nosetests --exe pims
+test:
+  # Python imports
+  imports:
+    - pims
+
+  #commands:
+    # You can put test commands to be run here.  Use this to test that the
+    # entry points work.
+
+
+  # You can also put a file called run_test.py in the recipe that will be run
+  # at test time.
+
+  # requires:
+    # Put any additional test requirements here.  For example
+    # - nose
 
 about:
   home: https://github.com/soft-matter/pims
-  license: 3-clause BSD
+  license: 3-clause BSD License
+  summary: 'Python particle-tracking toolkit'
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
