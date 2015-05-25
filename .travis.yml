@@ -4,6 +4,10 @@ python:
   - 2.7
   - 3.4
 
+env:
+  global:
+  - secure: "WLxy9KLb6lVYzW5G8oiCBlbYesZDtAXpJE1ht+cOWMO8CvfcaklcO2VVuHQM3r2yihuH21jNO0JWUXFSzG8DduGCOUhm0/ebvuXDnHeaDh3mZEd+Z/kMX6hF/iP77CrGOk/XWc3cddWoDqywHdQOEBQBL5Oyd7L4DXVIXnIPv/U="
+
 install:
   - conda update --yes conda
   - conda create -n testenv --yes numpy scipy nose pillow matplotlib scikit-image jinja2 pip python=$TRAVIS_PYTHON_VERSION
@@ -28,4 +32,27 @@ before_install:
   - ./miniconda.sh -b -p /home/travis/mc
   - export PATH=/home/travis/mc/bin:$PATH
 
-script: nosetests --nologcapture
+script:
+  - nosetests --nologcapture
+  - |
+    if [[ $BUILD_DOCS == true ]]; then
+      make html --warningsaserrors
+    fi
+
+after_success:
+  - |
+    if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_REPO_SLUG == 'soft-matter/pims' && $BUILD_DOCS == true && $TRAVIS_BRANCH == 'master' ]]; then
+      cd $TRAVIS_BUILD_DIR
+      echo "Uploading documentation"
+	  cd .. && git checkout gh-pages && git rm -rf . && touch .nojekyll && mv doc/_build/html/* . && rm -rf doc && git add -A && git commit -a --amend -m "Makefile is force-commiting new build." && git push upstream gh-pages -f
+      cd ..
+      git clone git@github.com:pims/devdocs.git
+      cd devdocs
+      git checkout --orphan gh-pages
+      git reset --hard first_commit
+      cp -R ../pims/doc/build/html/. .
+      touch .nojekyll
+      git add .
+      git commit -m "Docs build of $TRAVIS_COMMIT"
+      git push --set-upstream origin gh-pages --force
+    fi
