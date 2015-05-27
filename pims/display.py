@@ -444,3 +444,23 @@ def plots_to_frame(figures, width=512, close_fig=False, **imsave_kwargs):
         frames.append(im)
 
     return Frame(np.array(frames))
+
+
+class Viewer(object):
+
+    def __init__(self, ax, frames, cmap=None):
+        self.ax = ax
+        self.frames = frames
+        if cmap is None:
+            cmap = 'gray'
+        self.im = ax.imshow(frames[0], cmap=cmap)
+
+    def widget(self):
+        from IPython.html.widgets import interact
+        widget = interact(self.f, frame_number=(0, len(self.frames) - 1))
+        return widget
+
+    def f(self, frame_number):
+        self.im.set_data(self.frames[frame_number])
+        self.im.autoscale()
+        self.ax.figure.canvas.draw()
